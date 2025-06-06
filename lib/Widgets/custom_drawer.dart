@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_shortener_project/Screens/Static/privacy_policy.dart';
 import 'package:url_shortener_project/Utils/ImageAssets.dart';
 import '../Screens/Static/about_screen.dart';
 import '../Screens/Static/contact_me_screen.dart';
@@ -33,6 +34,15 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 NavigationUtils.slideTransition(ContactMeScreen()),
+              );
+            },
+          ),
+          CustomListTile(
+            icon: Icons.local_police_outlined,
+            title: 'Privacy Policy',
+            onTap: () {
+              Navigator.of(context).push(
+                NavigationUtils.slideTransition(PrivacyPolicy()),
               );
             },
           ),
