@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart'; // ✅ for launching URL
 import 'package:url_shortener_project/Utils/AppColors.dart';
 import 'package:url_shortener_project/Utils/FFontStyles.dart';
 
+import 'CommonWIdgets.dart';
 import 'CustomSnackbar.dart';
 
 class ShortUrlCard extends StatelessWidget {
@@ -25,8 +28,8 @@ class ShortUrlCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: AppColors.buttonShadow.withOpacity(0.3),
-            blurRadius: 6, // similar to elevation
-            offset: Offset(0, 2), // optional: for natural shadow drop
+            blurRadius: 6,
+            offset: Offset(0, 2),
           ),
         ],
         borderRadius: BorderRadius.circular(20),
@@ -36,10 +39,16 @@ class ShortUrlCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                shortUrl,
-                style: CustomTextStyles.shortUrl(context),
-                overflow: TextOverflow.ellipsis,
+              child: GestureDetector(
+                onTap: () => openURL(context, shortUrl),
+                child: Text(
+                  shortUrl,
+                  style: CustomTextStyles.shortUrl(context).copyWith(
+                    color: Colors.blue, // 🔵 Makes it look clickable
+                    decoration: TextDecoration.underline,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             SizedBox(width: width * 0.02),
@@ -49,7 +58,10 @@ class ShortUrlCard extends StatelessWidget {
                 color: AppColors.textFieldFill,
                 size: width * 0.055,
               ),
-              onPressed: () => CustomSnackbar.show(context, message: 'Copied to clipboard!', isSuccess: true,),
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: shortUrl));
+                CustomSnackbar.show(context, message: 'Copied to clipboard!', isSuccess: true);
+              },
               tooltip: 'Copy URL',
             ),
           ],
@@ -57,4 +69,5 @@ class ShortUrlCard extends StatelessWidget {
       ),
     );
   }
+
 }

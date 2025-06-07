@@ -1,6 +1,11 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_shortener_project/Utils/AppColors.dart';
 import 'package:url_shortener_project/Utils/FFontStyles.dart';
+
+import 'CustomSnackbar.dart';
 
 class CustomListTile extends StatelessWidget {
   final IconData icon;
@@ -53,5 +58,30 @@ class NavigationUtils {
       },
       transitionDuration: const Duration(milliseconds: 300),
     );
+  }
+}
+
+
+void openURL(BuildContext context, String urlString) async {
+  if (urlString.isEmpty || urlString.trim().isEmpty) {
+    CustomSnackbar.show(context, message: 'URL is empty', isSuccess: false);
+    return;
+  }
+
+  String cleanedUrl = urlString.trim();
+  if (!cleanedUrl.startsWith('http://') && !cleanedUrl.startsWith('https://')) {
+    cleanedUrl = 'https://$cleanedUrl';
+  }
+
+  try {
+    final Uri url = Uri.parse(cleanedUrl);
+    print('Attempting to launch: $cleanedUrl'); // Debug log
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.platformDefault);
+    } else {
+      CustomSnackbar.show(context, message: 'Could not launch URL', isSuccess: false);
+    }
+  } catch (e) {
+    CustomSnackbar.show(context, message: 'Invalid URL: $e', isSuccess: false);
   }
 }
