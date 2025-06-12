@@ -15,7 +15,7 @@ class ShrinkZapBloc extends Bloc<ShrinkZapEvent, ShrinkZapState> {
     on<ShrinkZapEventHandler>((event, emit) async {
       emit(ShrinkZapLoading());
       try {
-        final String avatarKey = "454739b9-415f-493f-bc7c-e64f62bf1f13";
+        final String avatarKey = ApiConstants.xAvatarKey;
         String url = ApiConstants.baseUrl;
 
         final Map<String, dynamic> body = {

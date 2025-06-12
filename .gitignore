@@ -47,7 +47,7 @@ android/.gradle
 .pub/
 /build/
 .env
-
+Constants.dart
 
 # Symbolication related
 app.*.symbols
