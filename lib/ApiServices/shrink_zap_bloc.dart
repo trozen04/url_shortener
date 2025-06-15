@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:url_shortener_project/Utils/Constants.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:metadata_fetch/metadata_fetch.dart';
 
 part 'shrink_zap_event.dart';
 part 'shrink_zap_state.dart';
@@ -36,7 +37,19 @@ class ShrinkZapBloc extends Bloc<ShrinkZapEvent, ShrinkZapState> {
         if(response.statusCode == 200 || response.statusCode == 201) {
           String message = responseBody.containsKey('message') ? responseBody['message'] : 'Short url created successfully.';
           final responseData = responseBody['urldata'];
-          emit(ShrinkZapSuccess(message, responseData));
+
+          // Extract base_url to fetch webpage title
+          final String baseUrl = responseData['base_url'];
+
+          String? webpageTitle;
+          try {
+            final metadata = await MetadataFetch.extract(baseUrl);
+            webpageTitle = metadata?.title ?? 'Unknown Page';
+          } catch (e) {
+            webpageTitle = 'Unknown Page';
+          }
+
+          emit(ShrinkZapSuccess(message, responseData, webpageTitle));
         } else {
           String message = responseBody['message'];
           emit(ShrinkZapError(message));
@@ -46,7 +59,5 @@ class ShrinkZapBloc extends Bloc<ShrinkZapEvent, ShrinkZapState> {
         emit(ShrinkZapError("Something went wrong. Please try again."));
       }
     });
-
-
   }
 }

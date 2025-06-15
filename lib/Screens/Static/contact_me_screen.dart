@@ -60,7 +60,6 @@ class _ContactMeScreenState extends State<ContactMeScreen> with SingleTickerProv
         CustomSnackbar.show(context, message: 'Could not launch $url. No email app found.', isSuccess: false);
       }
     } catch (e) {
-      developer.log('Error launching URL: $e');
       CustomSnackbar.show(context, message: 'Failed to launch $url', isSuccess: false);
     }
   }

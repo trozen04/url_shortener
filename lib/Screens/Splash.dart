@@ -7,7 +7,8 @@ import 'package:url_shortener_project/Utils/ImageAssets.dart';
 import 'Homepage.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final VoidCallback? onAppStart;
+  const SplashScreen({super.key, this.onAppStart});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
+    widget.onAppStart?.call();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),

@@ -75,7 +75,6 @@ void openURL(BuildContext context, String urlString) async {
 
   try {
     final Uri url = Uri.parse(cleanedUrl);
-    print('Attempting to launch: $cleanedUrl'); // Debug log
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.platformDefault);
     } else {
