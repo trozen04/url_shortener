@@ -32,7 +32,6 @@ class ShrinkZapBloc extends Bloc<ShrinkZapEvent, ShrinkZapState> {
           body: jsonEncode(body),
         );
 
-        developer.log('response: ${response.body}');
         final responseBody = jsonDecode(response.body);
         if(response.statusCode == 200 || response.statusCode == 201) {
           String message = responseBody.containsKey('message') ? responseBody['message'] : 'Short url created successfully.';

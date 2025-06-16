@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_shortener_project/Utils/AppColors.dart';
@@ -34,19 +36,28 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
           title: Text("Full History", style: CustomTextStyles.subheading(context).copyWith(color: Colors.white),),
         backgroundColor: AppColors.brandNew,
         centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(CupertinoIcons.back, color: Colors.white),
+          onPressed: () {
             Navigator.pop(context);
           },
-          child: Icon(CupertinoIcons.back, color: Colors.white,),
         ),
       ),
       body: allHistory.isEmpty
-          ? Center(child: Text("No history found"))
+          ? Center(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.manage_history_outlined, size: width * 0.4, color: AppColors.greyText),
+              SizedBox(height: height * 0.02,),
+              Text("No history found", style: CustomTextStyles.subheading(context),),
+            ],
+          ))
           : Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.01),
             child: ListView.builder(

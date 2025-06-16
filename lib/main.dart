@@ -3,9 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_shortener_project/ApiServices/shrink_zap_bloc.dart';
 import 'package:url_shortener_project/Screens/Splash.dart';
 import 'Widgets/ReviewService.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+    ),
+  );
   runApp(const MyApp());
 }
 

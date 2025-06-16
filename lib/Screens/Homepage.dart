@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
         if (state is ShrinkZapLoading) {
           setState(() => _loading = true);
         } else if (state is ShrinkZapSuccess) {
-          developer.log('success: ${state.responseData}');
           setState(() {
             _loading = false;
             responseData = state.responseData;
@@ -79,7 +78,6 @@ class _HomePageState extends State<HomePage> {
 
           CustomSnackbar.show(context, message: state.message, isSuccess: true);
         } else if (state is ShrinkZapError) {
-          developer.log('error: ${state.message}');
           setState(() => _loading = false);
           CustomSnackbar.show(context, message: state.message, isSuccess: false);
         }
@@ -103,96 +101,94 @@ class _HomePageState extends State<HomePage> {
           ),
           backgroundColor: Colors.white,
           drawer: const CustomDrawer(),
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  //Image.asset(ImageAssets.appIcon, height: height * 0.1),
-                  Text('Shorten your links in a snap!', style: CustomTextStyles.subtitle(context), textAlign: TextAlign.center),
-                  SizedBox(height: height * 0.01),
-                  Container(
-                    decoration: BoxDecoration(color: AppColors.cardBackground, borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.015),
-                      child: Column(
-                        children: [
-                          CustomTextField(controller: _controller, hintText: 'Paste your long URL here'),
-                          SizedBox(height: height * 0.02),
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            child: ElevatedButton.icon(
-                              onPressed: _loading
-                                  ? null
-                                  : () {
-                                final urlText = _controller.text.trim();
-                                if (urlText.isEmpty) {
-                                  CustomSnackbar.show(context, message: 'Please enter a URL', isSuccess: false);
-                                } else {
-                                  context.read<ShrinkZapBloc>().add(ShrinkZapEventHandler(url: urlText));
-                                }
-                              },
-                              icon: _loading
-                                  ? SizedBox(height: height * 0.025, width: height * 0.025, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.textFieldFill))
-                                  : FaIcon(FontAwesomeIcons.arrowRight, size: width * 0.06, color: AppColors.textFieldFill),
-                              label: Text(_loading ? 'Shortening...' : 'Shrink It!', style: CustomTextStyles.button(context)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: AppColors.textPrimary,
-                                padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.01),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.03)),
-                                elevation: 4,
-                              ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.01),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                //Image.asset(ImageAssets.appIcon, height: height * 0.1),
+                Text('Shorten your links in a snap!', style: CustomTextStyles.subtitle(context), textAlign: TextAlign.center),
+                SizedBox(height: height * 0.01),
+                Container(
+                  decoration: BoxDecoration(color: AppColors.cardBackground, borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.015),
+                    child: Column(
+                      children: [
+                        CustomTextField(controller: _controller, hintText: 'Paste your long URL here'),
+                        SizedBox(height: height * 0.02),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          child: ElevatedButton.icon(
+                            onPressed: _loading
+                                ? null
+                                : () {
+                              final urlText = _controller.text.trim();
+                              if (urlText.isEmpty) {
+                                CustomSnackbar.show(context, message: 'Please enter a URL', isSuccess: false);
+                              } else {
+                                context.read<ShrinkZapBloc>().add(ShrinkZapEventHandler(url: urlText));
+                              }
+                            },
+                            icon: _loading
+                                ? SizedBox(height: height * 0.025, width: height * 0.025, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.textFieldFill))
+                                : FaIcon(FontAwesomeIcons.arrowRight, size: width * 0.06, color: AppColors.textFieldFill),
+                            label: Text(_loading ? 'Shortening...' : 'Shrink It!', style: CustomTextStyles.button(context)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.textPrimary,
+                              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.01),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width * 0.03)),
+                              elevation: 4,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: height * 0.03),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
-                    child: _shortUrl != null
-                        ? ShortUrlCard(
-                      key: ValueKey(_shortUrl),
-                      shortUrl: _shortUrl!,
-                      baseUrlTitle: _baseUrlTitle ?? "Loading...",
-                    )
-                        : const SizedBox.shrink(),
-                  ),
-
-                  if (recentHistory.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Recent History", style: CustomTextStyles.subtitle(context)),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(context, CustomPageRoute(child: HistoryScreen()));
-                          },
-                          child: Text("View All >", style: CustomTextStyles.subtitle(context)),
                         ),
                       ],
                     ),
-                  SizedBox(height: height * 0.005),
-                  if (recentHistory.isNotEmpty)
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: recentHistory.length,
-                        itemBuilder: (context, index) {
-                          final item = recentHistory[index];
-                          return ShortUrlCard(
-                            shortUrl: item.shortUrl,
-                            baseUrlTitle: item.webpageTitle ?? "No Title",
-                          );
+                  ),
+                ),
+                SizedBox(height: height * 0.03),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+                  child: _shortUrl != null
+                      ? ShortUrlCard(
+                    key: ValueKey(_shortUrl),
+                    shortUrl: _shortUrl!,
+                    baseUrlTitle: _baseUrlTitle ?? "Loading...",
+                  )
+                      : const SizedBox.shrink(),
+                ),
+
+                if (recentHistory.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Recent History", style: CustomTextStyles.subtitle(context)),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context, CustomPageRoute(child: HistoryScreen()));
                         },
+                        child: Text("View All >", style: CustomTextStyles.subtitle(context)),
                       ),
+                    ],
+                  ),
+                SizedBox(height: height * 0.005),
+                if (recentHistory.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: recentHistory.length,
+                      itemBuilder: (context, index) {
+                        final item = recentHistory[index];
+                        return ShortUrlCard(
+                          shortUrl: item.shortUrl,
+                          baseUrlTitle: item.webpageTitle ?? "No Title",
+                        );
+                      },
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         ),
