@@ -29,4 +29,12 @@ class HistoryHelper {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);
   }
+
+  // Add this to HistoryHelper
+  static Future<void> updateAllHistory(List<UrlHistoryModel> updatedList) async {
+    final prefs = await SharedPreferences.getInstance();
+    final encodedList = updatedList.map((e) => jsonEncode(e.toJson())).toList();
+    await prefs.setStringList(_key, encodedList);
+  }
+
 }

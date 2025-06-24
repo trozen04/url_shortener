@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_shortener_project/Utils/AppColors.dart';
 import 'package:url_shortener_project/Utils/FFontStyles.dart';
+import 'package:url_shortener_project/Widgets/CustomPopUp.dart';
 import '../Helper/HistoryHelper.dart';
 import '../ApiServices/UrlHistoryModel.dart';
 import '../Widgets/ShortUrlCard.dart';
@@ -38,7 +41,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: Text("Full History", style: CustomTextStyles.subheading(context).copyWith(color: Colors.white),),
+        title: Text(
+          "Full History",
+          style: CustomTextStyles.subheading(context).copyWith(color: Colors.white),
+        ),
         backgroundColor: AppColors.brandNew,
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -48,6 +54,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: Colors.white),
+            onPressed: () async {
+              final shouldDelete = await showDialog<bool>(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => const ClearHistoryDialog(),
+              );
+
+              if (shouldDelete == true) {
+                await HistoryHelper.clearHistory();
+                setState(() {
+                  allHistory.clear();
+                });
+              }
+            },
+          ),
+          SizedBox(width: width * 0.035,)
+        ],
       ),
       body: allHistory.isEmpty
           ? Center(child: Column(
@@ -62,14 +88,49 @@ class _HistoryScreenState extends State<HistoryScreen> {
         padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.01),
             child: ListView.builder(
                     itemCount: allHistory.length,
-                    itemBuilder: (context, index) {
-            final item = allHistory[index];
-            return ShortUrlCard(
-              shortUrl: item.shortUrl,
-              baseUrlTitle: item.webpageTitle ?? "No Title",
-            );
-                    },
+
+              itemBuilder: (context, index) {
+                final item = allHistory[index];
+
+                return Dismissible(
+                  key: Key(item.shortUrl),
+                  direction: DismissDirection.endToStart,
+                  background: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.005),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      alignment: Alignment.centerRight,
+                      padding:  EdgeInsets.only(right: width * 0.05),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: height * 0.05, // smaller icon
+                      ),
+                    ),
                   ),
+
+                  onDismissed: (direction) async {
+                    setState(() {
+                      allHistory.removeAt(index);
+                    });
+
+                    await HistoryHelper.updateAllHistory(allHistory);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Item deleted")),
+                    );
+                  },
+                  child: ShortUrlCard(
+                    shortUrl: item.shortUrl,
+                    baseUrlTitle: item.webpageTitle ?? "No Title",
+                  ),
+                );
+              },
+
+            ),
           ),
     );
   }

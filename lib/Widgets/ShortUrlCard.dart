@@ -33,7 +33,7 @@ class ShortUrlCard extends StatelessWidget {
             offset: Offset(0, 2),
           ),
         ],
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
