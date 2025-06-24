@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_shortener_project/Utils/AppColors.dart';
 import 'package:url_shortener_project/Utils/FFontStyles.dart';
 import 'package:url_shortener_project/Widgets/CustomPopUp.dart';
+import 'package:url_shortener_project/Widgets/CustomSnackbar.dart';
 import '../Helper/HistoryHelper.dart';
 import '../ApiServices/UrlHistoryModel.dart';
 import '../Widgets/ShortUrlCard.dart';
@@ -86,49 +87,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ))
           : Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.01),
-            child: ListView.builder(
-                    itemCount: allHistory.length,
+            child: ListView.builder(itemCount: allHistory.length,
 
-              itemBuilder: (context, index) {
-                final item = allHistory[index];
+                itemBuilder: (context, index) {
+                  final item = allHistory[index];
 
-                return Dismissible(
-                  key: Key(item.shortUrl),
-                  direction: DismissDirection.endToStart,
-                  background: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.035, vertical: height * 0.005),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding:  EdgeInsets.only(right: width * 0.05),
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                        size: height * 0.05, // smaller icon
-                      ),
-                    ),
-                  ),
-
-                  onDismissed: (direction) async {
-                    setState(() {
-                      allHistory.removeAt(index);
-                    });
-
-                    await HistoryHelper.updateAllHistory(allHistory);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Item deleted")),
-                    );
-                  },
-                  child: ShortUrlCard(
+                  return ShortUrlCard(
+                    key: Key(item.shortUrl),
                     shortUrl: item.shortUrl,
                     baseUrlTitle: item.webpageTitle ?? "No Title",
-                  ),
-                );
-              },
+                    onDelete: () async {
+                      setState(() {
+                        allHistory.removeWhere((element) => element.shortUrl == item.shortUrl);
+                      });
+                      await HistoryHelper.updateAllHistory(allHistory);
+                    },
+
+                  );
+                }
+
 
             ),
           ),

@@ -17,7 +17,8 @@ import 'package:url_shortener_project/Screens/HistoryScreen.dart';
 import 'package:url_shortener_project/Utils/CustomPageRoute.dart';  // <<== newly added
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String? sharedText;
+  const HomePage({super.key, this.sharedText});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -35,6 +36,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     loadRecentHistory();
+    if (widget.sharedText != null && widget.sharedText!.isNotEmpty) {
+      _controller.text = widget.sharedText!;
+    }
   }
 
   Future<void> loadRecentHistory() async {
@@ -156,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                       ? ShortUrlCard(
                     key: ValueKey(_shortUrl),
                     shortUrl: _shortUrl!,
-                    baseUrlTitle: _baseUrlTitle ?? "Loading...",
+                    baseUrlTitle: _baseUrlTitle ?? "Loading...", onDelete: () {},
                   )
                       : const SizedBox.shrink(),
                 ),
@@ -184,6 +188,8 @@ class _HomePageState extends State<HomePage> {
                         return ShortUrlCard(
                           shortUrl: item.shortUrl,
                           baseUrlTitle: item.webpageTitle ?? "No Title",
+                          onDelete: () {},
+                          key: Key(item.shortUrl),
                         );
                       },
                     ),

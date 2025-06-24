@@ -76,7 +76,7 @@ class CustomTextStyles {
     final width = MediaQuery.of(context).size.width;
     return TextStyle(
       fontFamily: 'Outfit',
-      fontSize: width < 500 ? width * 0.035 : width * 0.025,
+      fontSize: width < 500 ? width * 0.03 : width * 0.025,
       color: AppColors.textFieldFill,
       fontWeight: FontWeight.w500,
     );
