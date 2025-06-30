@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_shortener_project/Screens/Static/privacy_policy.dart';
+import 'package:url_shortener_project/Utils/Constants.dart';
 import 'package:url_shortener_project/Utils/ImageAssets.dart';
 import '../Screens/Static/about_screen.dart';
 import '../Screens/Static/contact_me_screen.dart';
@@ -30,7 +31,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           CustomListTile(
             icon: Icons.contact_mail,
-            title: 'Contact Me',
+            title: 'Contact Us',
             onTap: () {
               Navigator.of(context).push(
                 NavigationUtils.slideTransition(ContactMeScreen()),
@@ -46,6 +47,12 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
+          CustomListTile(
+            icon: Icons.store, // Store icon
+            title: 'My Store',
+              onTap: () => URLLauncherUtils.launch(context, Constants.storeUrl),
+          ),
+
         ],
       ),
     );

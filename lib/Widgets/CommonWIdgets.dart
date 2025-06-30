@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_shortener_project/Utils/AppColors.dart';
 import 'package:url_shortener_project/Utils/FFontStyles.dart';
@@ -82,5 +83,39 @@ void openURL(BuildContext context, String urlString) async {
     }
   } catch (e) {
     CustomSnackbar.show(context, message: 'Invalid URL: $e', isSuccess: false);
+  }
+}
+
+class URLLauncherUtils {
+  static Future<void> launch(BuildContext context, String url) async {
+    final Uri uri = Uri.parse(url);
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (url.startsWith('mailto:') || url.startsWith('tel:')) {
+          final fallback = url.replaceFirst(RegExp(r'^mailto:|tel:'), '');
+          await Clipboard.setData(ClipboardData(text: fallback));
+          CustomSnackbar.show(
+            context,
+            message: 'No compatible app found. Info copied to clipboard!',
+            isSuccess: true,
+          );
+        } else {
+          CustomSnackbar.show(
+            context,
+            message: 'Could not open link. No app found for: $url',
+            isSuccess: false,
+          );
+        }
+      }
+    } catch (e) {
+      CustomSnackbar.show(
+        context,
+        message: 'Error opening link: $e',
+        isSuccess: false,
+      );
+    }
   }
 }

@@ -52,23 +52,6 @@ class _ContactMeScreenState extends State<ContactMeScreen> with SingleTickerProv
     super.dispose();
   }
 
-  Future<void> _launchURL(BuildContext context, String url) async {
-    final Uri uri = Uri.parse(url);
-    try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        if (url.startsWith('mailto')) {
-          await Clipboard.setData(ClipboardData(text: 'bhoopendrablog@gmail.com'));
-          CustomSnackbar.show(context, message: 'No email app found. Email copied to clipboard!', isSuccess: true);
-        } else {
-          CustomSnackbar.show(context, message: 'Could not launch $url. No compatible app found.', isSuccess: false);
-        }
-      }
-    } catch (e, stackTrace) {
-      CustomSnackbar.show(context, message: 'Failed to launch $url: $e', isSuccess: false);
-    }
-  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -111,12 +94,12 @@ class _ContactMeScreenState extends State<ContactMeScreen> with SingleTickerProv
                     icon: Icons.email,
                     title: 'Email',
                     subtitle: 'bhoopendrablog@gmail.com',
-                    onTap: () => _launchURL(context, 'mailto:bhoopendrablog@gmail.com')
+                    onTap: () => URLLauncherUtils.launch(context, 'mailto:bhoopendrablog@gmail.com')
                   ),
                   _buildContactTile(
                     icon: Icons.language,
                     title: 'Website',
-                    subtitle: 'https://movieloadtime.blogspot.com/',
+                    subtitle: 'Click to View',
                     onTap: () => openURL(context,'https://trozenwho.blogspot.com/'),
                   ),
 
@@ -124,7 +107,7 @@ class _ContactMeScreenState extends State<ContactMeScreen> with SingleTickerProv
                     icon: Icons.video_library, // or use a YouTube-specific icon if available
                     title: 'YouTube',
                     subtitle: '@trozen04',
-                    onTap: () => _launchURL(context, 'https://www.youtube.com/@trozen04'),
+                    onTap: () => URLLauncherUtils.launch(context, 'https://www.youtube.com/@trozen04'),
                   ),
 
                 ],

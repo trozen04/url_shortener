@@ -28,15 +28,15 @@ android {
         applicationId = "com.trozen.url_shortener_project"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode 10
-        versionName "1.0.8"
+        versionCode 18
+        versionName "1.1.1"
     }
 
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])  // This will resolve to android/my-release-key.jks
+            storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
     }
