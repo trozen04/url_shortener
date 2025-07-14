@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "838212087804",
+    "project_id": "shrinkzap",
+    "storage_bucket": "shrinkzap.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838212087804:android:afda2ca0a650d9e7438c79",
+        "android_client_info": {
+          "package_name": "com.trozen.url_shortener_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA_0qUcKdv_7fJ0B3ktcOYNy9DtLgPeDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

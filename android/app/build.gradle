@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
+    id 'com.google.gms.google-services'
 }
 
 def keystoreProperties = new Properties()
@@ -12,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.trozen.url_shortener_project"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -26,10 +27,10 @@ android {
 
     defaultConfig {
         applicationId = "com.trozen.url_shortener_project"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode 18
-        versionName "1.1.1"
+        minSdk = 23
+        targetSdk = 35
+        versionCode 20
+        versionName "1.1.2"
     }
 
     signingConfigs {
@@ -53,4 +54,11 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:33.16.0')
+    implementation 'com.google.firebase:firebase-analytics'
+
 }
